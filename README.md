@@ -1,6 +1,5 @@
 # Twitch API Search Sim
-[![Style Checker Workflow](https://github.com/pablo-cs/twitch-api-run/actions/workflows/style.yaml/badge.svg)](https://github.com/pablo-cs/twitch-api-run/actions/workflows/style.yaml)
-
+[![Style Checker Workflow]](https://github.com/AnthonyC247/API_Twitch/actions/workflows/style.yaml)
 ## Description
 
 This code currently allows the user to enter in any number
