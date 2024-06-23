@@ -2,7 +2,10 @@ import unittest
 from unittest.mock import patch, Mock
 import requests
 from twitch import get_user_data
+
+
 class TwitchAPITestCase(unittest.TestCase):
+
     @patch('twitch.requests.get')
     def test_get_user_data(self, mock_get):
         # Set up the mock responses
@@ -13,7 +16,6 @@ class TwitchAPITestCase(unittest.TestCase):
                 'display_name': 'TwitchDev',
                 'type': '',
                 'broadcaster_type': 'partner',
-                'description': 'Supporting third-party developers',
                 'description': 'Supporting third-party developers.',
                 'profile_image_url': 'n/a',
                 'offline_image_url': 'n/a',
@@ -43,7 +45,7 @@ class TwitchAPITestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer mock_token',
             'Client-Id': 'mock_client_id'
-            }
+        }
         user_data = get_user_data('twitchdev', headers)
         print(user_data['follower_count'])
         # Assert the expected result
@@ -63,5 +65,7 @@ class TwitchAPITestCase(unittest.TestCase):
             'video_data': []
         }
         self.assertEqual(user_data, expected_user_data)
+
+
 if __name__ == '__main__':
     unittest.main()

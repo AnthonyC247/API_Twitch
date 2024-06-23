@@ -49,24 +49,24 @@ def get_user_data(user_name, headers):
         user_id = user_data['id']
         # Requests the follower data of the user and stores it in the user data
         followers_req = requests.get(
-            BASE_URL +
-            '/channels/followers?broadcaster_id=' +
-            user_id,
-            headers=headers)
+                                        BASE_URL +
+                                        '/channels/followers?broadcaster_id=' +
+                                        user_id,
+                                        headers=headers)
         user_data['follower_count'] = followers_req.json()['total']
         channel_req = requests.get(
-            BASE_URL +
-            '/channels?broadcaster_id=' +
-            user_id,
-            headers=headers)
+                                    BASE_URL +
+                                    '/channels?broadcaster_id=' +
+                                    user_id,
+                                    headers=headers)
         channel_data = channel_req.json()['data'][0]
         user_data['last_game_played'] = channel_data['game_name']
         # Requests information on the user's videos
         video_req = requests.get(
-            BASE_URL +
-            '/videos?user_id=' +
-            user_id,
-            headers=headers)
+                                    BASE_URL +
+                                    '/videos?user_id=' +
+                                    user_id,
+                                    headers=headers)
         user_data['video_data'] = video_req.json()['data']
         return user_data
     else:
@@ -131,7 +131,6 @@ def main():
         user_name = input('Enter username to search and add or QUIT: ')
 
         print('------------------')
-
         if user_name.upper() == 'QUIT':
             break
         user_data = get_user_data(user_name.strip(), headers)
