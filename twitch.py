@@ -23,6 +23,7 @@ def generate_headers():
         'client_secret': CLIENT_SECRET,
         'grant_type': 'client_credentials',
     })
+
     auth_response_data = auth_response.json()
     print(auth_response_data)
     access_token = auth_response_data['access_token']
@@ -44,16 +45,21 @@ def get_user_data(user_name, headers):
                             '/users?login=' +
                             user_name, headers=headers)
     user_data = user_req.json()['data']
+
     if len(user_data) != 0:
         user_data = user_req.json()['data'][0]
+
         user_id = user_data['id']
+
         # Requests the follower data of the user and stores it in the user data
         followers_req = requests.get(
                                         BASE_URL +
                                         '/channels/followers?broadcaster_id=' +
                                         user_id,
                                         headers=headers)
+
         user_data['follower_count'] = followers_req.json()['total']
+
         channel_req = requests.get(
                                     BASE_URL +
                                     '/channels?broadcaster_id=' +
@@ -61,6 +67,7 @@ def get_user_data(user_name, headers):
                                     headers=headers)
         channel_data = channel_req.json()['data'][0]
         user_data['last_game_played'] = channel_data['game_name']
+
         # Requests information on the user's videos
         video_req = requests.get(
                                     BASE_URL +
@@ -68,6 +75,7 @@ def get_user_data(user_name, headers):
                                     user_id,
                                     headers=headers)
         user_data['video_data'] = video_req.json()['data']
+
         return user_data
     else:
         return None
@@ -87,6 +95,7 @@ def user_to_str(user_data):
     ).strftime("%B %d, %Y") + \
         "\nLast played: " + user_data['last_game_played'] + \
         "\nMost Recent Videos:"
+
     # Prints out information on the 5 (at most) most recent videos
     i = 0
     while i < 5 and i < len(user_data['video_data']):
@@ -101,16 +110,19 @@ def user_to_str(user_data):
             vid_date = datetime.strptime(vid_date, "%Y-%m-%dT%H:%M:%SZ")
         user_str += vid_date.strftime("%B %d, %Y")
         i += 1
+
     return user_str
 
 
 def print_sql(user_data_list, engine):
     if len(user_data_list) > 0:
         print('Here are all the streamers you added')
+
         # Creates dataframes and SQL stuff using a list of users' dictionaries
         df = pd.DataFrame(user_data_list)
         df = df.drop('video_data', axis=1)
         df.to_sql('users', con=engine, if_exists='replace', index=False)
+
         with engine.connect() as connection:
             columns = "display_name, broadcaster_type, follower_count"
             query = "SELECT " + columns + " FROM users;"
@@ -123,14 +135,16 @@ def main():
     headers = generate_headers()
     # Setup engine for SQL interaction
     engine = db.create_engine('sqlite:///users.db')
+
     # Asks user to input username of a Twitch account
     user_name = ''
+
     user_data_list = []  # Used to create a list of user data
 
     while True:
         user_name = input('Enter username to search and add or QUIT: ')
-
         print('------------------')
+
         if user_name.upper() == 'QUIT':
             break
         user_data = get_user_data(user_name.strip(), headers)
@@ -141,6 +155,7 @@ def main():
         else:
             print("User not found :(")
         print('------------------')
+
     print_sql(user_data_list, engine)
 
 

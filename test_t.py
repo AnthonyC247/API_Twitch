@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import patch, Mock
+import requests
 from twitch import get_user_data
+
 
 class TwitchAPITestCase(unittest.TestCase):
 
@@ -32,6 +34,7 @@ class TwitchAPITestCase(unittest.TestCase):
                     'user_login': 'userloginname',
                     'followed_at': '2022-05-24T22:22:08Z',
                 }
+
             ]
         }
 
@@ -63,9 +66,10 @@ class TwitchAPITestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer mock_token',
             'Client-Id': 'mock_client_id'
-        }
-        user_data = get_user_data('twitchdev', headers)
+            }
 
+        user_data = get_user_data('twitchdev', headers)
+        print(user_data['follower_count'])
         # Assert the expected result
         expected_user_data = {
             'id': '141981764',
@@ -86,6 +90,6 @@ class TwitchAPITestCase(unittest.TestCase):
 
         self.assertEqual(user_data, expected_user_data)
 
+
 if __name__ == '__main__':
     unittest.main()
-
