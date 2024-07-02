@@ -1,8 +1,9 @@
+import git
 from flask import Flask, render_template, request
 try:
-    from .twitch_api import generate_headers, get_user_data, update_sql
+    from .twitch import generate_headers, get_user_data, update_sql
 except ImportError:
-    from twitch_api import generate_headers, get_user_data, update_sql
+    from twitch import generate_headers, get_user_data, update_sql
 
 app = Flask(__name__)
 
@@ -10,6 +11,16 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
+@app.route("/update_server", methods=['POST'])
+def webhook():
+    if request.method == 'POST':
+        repo = git.Repo('/home/AnthonyC247/API-Twicth')
+        origin = repo.remotes.origin
+        origin.pull()
+        return 'Updated PythonAnywhere successfully', 200
+    else:
+        return 'Wrong event type', 400
+        
 @app.route('/search', methods=['POST'])
 def search():
     user_name = request.form.get('search') 
